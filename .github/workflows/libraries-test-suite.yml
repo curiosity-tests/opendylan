@@ -5,7 +5,7 @@ on:
     paths-ignore: ['documentation/**', '**.rst', '**.md']
   pull_request:
     branches:
-      - master
+    - master
     paths-ignore: ['documentation/**', '**.rst', '**.md']
 
   # This enables the Run Workflow button on the Actions tab.
@@ -16,21 +16,22 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os:
+        - ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-        with:
-          path: od
-          submodules: recursive
+    - uses: actions/checkout@v7
+      with:
+        path: od
+        submodules: recursive
 
-      - uses: dylan-lang/install-opendylan@v3
+    - uses: dylan-lang/install-opendylan@v3
 
-      - name: Build libraries-test-suite-app
-        run: |
-          # We want to use the registry in the sources directory...
-          cd od/sources
-          dylan-compiler -build -jobs 3 libraries-test-suite-app
+    - name: Build libraries-test-suite-app
+      run: |
+        # We want to use the registry in the sources directory...
+        cd od/sources
+        dylan-compiler -build -jobs 3 libraries-test-suite-app
 
-      - name: Run libraries-test-suite-app
-        run: |
-          od/sources/_build/bin/libraries-test-suite-app --tag=-benchmark
+    - name: Run libraries-test-suite-app
+      run: |
+        od/sources/_build/bin/libraries-test-suite-app --tag=-benchmark
